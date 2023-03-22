@@ -1,36 +1,31 @@
-import { StatusBar } from "expo-status-bar";
-import { collection, addDoc } from "firebase/firestore";
-import { Button, StyleSheet, Text, View } from "react-native";
-import db from "./firebaseConfig";
+import { StyleSheet } from "react-native";
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import Login from "./components/screens/Login";
+import SignIn from "./components/screens/SignIn";
+import Home from "./components/screens/Home";
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
-  //sample
-  const sendData = async () => {
-    try {
-      const docRef = await addDoc(collection(db, "users"), {
-        first: "Ada",
-        last: "Lovelace",
-        born: 1815,
-      });
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  };
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <Button onPress={sendData} title="CLick"></Button>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="Login"
+          component={Login}
+        />
+        <Stack.Screen name="SignUp" component={SignIn} />
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
