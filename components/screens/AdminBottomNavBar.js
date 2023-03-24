@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import AboutUs from "./AboutUs";
+// import AboutUs from "./AboutUs";
 import AdminDashBoard from "./AdminDashboard";
 import ChannelingCentersView from "./ChannelingCentersView";
 import PharmaciesView from "./PharmaciesView";
@@ -55,7 +55,7 @@ const AdminBottomNavBar = () => {
         component={ChannelingCentersView}
       />
       <Tab.Screen name={searchPharmacy} component={PharmaciesView} />
-      <Tab.Screen name={about} component={AboutUs} />
+      {/* <Tab.Screen name={about} component={AboutUs} /> */}
     </Tab.Navigator>
   );
 };

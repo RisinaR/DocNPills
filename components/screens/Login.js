@@ -34,7 +34,7 @@ const Login = ({ navigation }) => {
 
   const onDismissSuccessSnackBar = () => {
     setVisibleSuccess(false);
-    navigation.replace("Home");
+    navigation.replace("AdminNavBar");
   };
 
   const onToggleErrorSnackBar = () => {
@@ -49,7 +49,7 @@ const Login = ({ navigation }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        navigation.replace("Home");
+        navigation.replace("AdminNavBar");
       }
     });
     return unsubscribe;
