@@ -88,6 +88,7 @@ const AddMedicineForm = ({ route, navigation }) => {
         setLoading(false);
         onToggleErrorSnackBar();
       }
+      setRefresh(!refresh);
     } else {
       alert("Please fill all the fields");
     }
