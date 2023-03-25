@@ -5,11 +5,12 @@ import AboutUs from "./AboutUs";
 import AdminDashBoard from "./AdminDashboard";
 import ChannelingCentersView from "./ChannelingCentersView";
 import PharmaciesView from "./PharmaciesView";
+import AdminProfile from "./AdminProfile";
 
 const adDashboard = "AdDashboard";
 const searchChannelingCenter = "Channeling Centers";
 const searchPharmacy = "Pharmacies";
-//const profile = "Profile";
+const profile = "Profile";
 const about = "About Us";
 
 const Tab = createBottomTabNavigator();
@@ -33,6 +34,8 @@ const AdminBottomNavBar = () => {
             iconName = focused
               ? "information-circle"
               : "information-circle-outline";
+          } else if (routerName === profile) {
+            iconName = focused ? "person-circle" : "person-circle-outline";
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -56,6 +59,7 @@ const AdminBottomNavBar = () => {
       />
       <Tab.Screen name={searchPharmacy} component={PharmaciesView} />
       <Tab.Screen name={about} component={AboutUs} />
+      <Tab.Screen name={profile} component={AdminProfile} />
     </Tab.Navigator>
   );
 };

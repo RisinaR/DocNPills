@@ -78,7 +78,7 @@ const PharmacyProfile = ({ navigation }) => {
                 borderRadius: 10,
                 margin: 10,
               }}
-              onPress={showDialog}
+              onPress={handlelogout}
             >
               Log out
             </Button>
