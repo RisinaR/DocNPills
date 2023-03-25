@@ -3,7 +3,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./components/screens/Login";
 import SignIn from "./components/screens/SignIn";
-import Home from "./components/screens/Home";
 import AddCenterForm from "./components/screens/AddCenterForm";
 import Welcome from "./components/screens/Welcome";
 import AdminBottomNavBar from "./components/screens/AdminBottomNavBar";
@@ -19,8 +18,8 @@ import ChannelingCenterHome from "./components/screens/ChannelingCenterHome";
 import Doctors from "./components/screens/Doctors";
 import AddDoctorForm from "./components/screens/AddDoctorForm";
 import UpdateDoctorForm from "./components/screens/UpdateDoctorForm";
-
-
+import PatientBottomNavBar from "./components/screens/PatientBottomNavBar";
+import PatientUpdateForm from "./components/screens/PatientUpdateForm";
 
 const Stack = createNativeStackNavigator();
 
@@ -108,7 +107,16 @@ export default function App() {
           component={UpdateDoctorForm}
           options={{ headerTitleAlign: "center" }}
         />
-
+        <Stack.Screen
+          name="PatientNavBar"
+          component={PatientBottomNavBar}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Update Patient"
+          component={PatientUpdateForm}
+          options={{ headerTitleAlign: "center" }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
