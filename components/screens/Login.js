@@ -9,12 +9,16 @@ import TextInput from "../Assets/TextInput";
 import BackButton from "../Assets/BackButton";
 import { theme } from "../core/theme";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import {
-  getAuth,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-} from "firebase/auth";
-import { useNavigation } from "@react-navigation/native";
+  getDoc,
+  doc,
+  query,
+  collection,
+  where,
+  getDocs,
+} from "firebase/firestore";
+import db from "../../firebaseConfig";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -33,8 +37,19 @@ const Login = ({ navigation }) => {
   };
 
   const onDismissSuccessSnackBar = () => {
+    console.log("userData", userData.type);
     setVisibleSuccess(false);
-    navigation.replace("AdminNavBar");
+    if (userData.type == "Pharmacy Agent") {
+      navigation.push("DocNPills");
+    } else if (userData.type == "Channeling Center Agent") {
+      navigation.push("ChCenterNavbar");
+    } else if (userData.type == "Patient") {
+      navigation.push("PatientNavBar");
+    } else if (userData.type == "System Admin") {
+      navigation.push("AdminNavBar");
+    } else {
+      alert(" You have to signup first ");
+    }
   };
 
   const onToggleErrorSnackBar = () => {
@@ -46,14 +61,14 @@ const Login = ({ navigation }) => {
     setLoading(false);
   };
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        navigation.replace("AdminNavBar");
-      }
-    });
-    return unsubscribe;
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       navigation.replace("AdminNavBar");
+  //     }
+  //   });
+  //   return unsubscribe;
+  // }, []);
 
   const handleLogin = async () => {
     setLoading(true);
@@ -62,12 +77,21 @@ const Login = ({ navigation }) => {
       setLoading(false);
     } else {
       await signInWithEmailAndPassword(auth, email, password)
-        .then((userCredentials) => {
+        .then(async (userCredentials) => {
           const user = userCredentials.user;
-          console.log("Logged in with:", user.email);
+          console.log("Logged in with:", user);
+          const q = query(
+            collection(db, "users"),
+            where("email", "==", user.email)
+          );
+          const querySnapshot = await getDocs(q);
+          querySnapshot.forEach((doc) => {
+            AsyncStorage.setItem("user", JSON.stringify(doc.data()));
+            AsyncStorage.setItem("id", doc.id);
+            setUserData(doc.data());
+          });
           setLoading(false);
-          setUserData(user);
-          AsyncStorage.setItem("email", user.email);
+
           onToggleSuccessSnackBar();
         })
         .catch((error) => {

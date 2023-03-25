@@ -1,34 +1,35 @@
 import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
-// import AboutUs from "./AboutUs";
-import AdminDashBoard from "./AdminDashboard";
-import ChannelingCentersView from "./ChannelingCentersView";
-import PharmaciesView from "./PharmaciesView";
-import AdminProfile from "./AdminProfile";
 
-const adDashboard = "AdDashboard";
-const searchChannelingCenter = "Channeling Centers";
-const searchPharmacy = "Pharmacies";
+import PatientDashboard from "./PatientDashBoard";
+import SearchDoctor from "./SearchDoctor";
+import SearchMedicine from "./SearchMedicine";
+import PatientProfile from "./PatientProfile";
+import AboutUs from "./AboutUs";
+
+const home = "Home";
+const searchDoctor = "Search Doctor";
+const searchMedicine = "Search Medicine";
 const profile = "Profile";
 const about = "About Us";
 
 const Tab = createBottomTabNavigator();
 
-const AdminBottomNavBar = () => {
+const PatientBottomNavBar = () => {
   return (
     <Tab.Navigator
-      initialRouteName={adDashboard}
+      initialRouteName={home}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
           let routerName = route.name;
 
-          if (routerName === adDashboard) {
+          if (routerName === home) {
             iconName = focused ? "home" : "home-outline";
-          } else if (routerName === searchPharmacy) {
+          } else if (routerName === searchMedicine) {
             iconName = focused ? "medkit" : "medkit-outline";
-          } else if (routerName === searchChannelingCenter) {
+          } else if (routerName === searchDoctor) {
             iconName = focused ? "people" : "people-outline";
           } else if (routerName === about) {
             iconName = focused
@@ -49,19 +50,36 @@ const AdminBottomNavBar = () => {
       }}
     >
       <Tab.Screen
-        name={adDashboard}
-        component={AdminDashBoard}
-        options={{ headerShown: false }}
+        name={searchDoctor}
+        component={SearchDoctor}
+        options={{ headerTitleAlign: "center" }}
       />
       <Tab.Screen
-        name={searchChannelingCenter}
-        component={ChannelingCentersView}
+        name={searchMedicine}
+        component={SearchMedicine}
+        options={{ headerTitleAlign: "center" }}
       />
-      <Tab.Screen name={searchPharmacy} component={PharmaciesView} />
-      <Tab.Screen name={about} component={AboutUs} />
-      <Tab.Screen name={profile} component={AdminProfile} />
+      <Tab.Screen
+        name={home}
+        component={PatientDashboard}
+        options={{
+          headerShown: true,
+          headerTitle: "Doc & Pills",
+          headerTitleAlign: "center",
+        }}
+      />
+      <Tab.Screen
+        name={about}
+        component={AboutUs}
+        options={{ headerTitleAlign: "center" }}
+      />
+      <Tab.Screen
+        name={profile}
+        component={PatientProfile}
+        options={{ headerTitleAlign: "center" }}
+      />
     </Tab.Navigator>
   );
 };
 
-export default AdminBottomNavBar;
+export default PatientBottomNavBar;

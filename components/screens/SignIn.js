@@ -60,6 +60,7 @@ const SignIn = ({ navigation }) => {
         mobile: mobile,
         address: address,
         password: password,
+        type: "Patient",
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (err) {
