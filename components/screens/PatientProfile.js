@@ -62,8 +62,10 @@ const PatientProfile = ({ navigation }) => {
 
   const deleteAccount = async () => {
     try {
-      await deleteDoc(doc(db, "medicines", (doc.id = id)));
+      await deleteDoc(doc(db, "users", (doc.id = id)));
       console.log("Document Deleted");
+      AsyncStorage.removeItem("id");
+      AsyncStorage.removeItem("user");
       navigation.navigate("Welcome");
     } catch (e) {
       console.error("Error Deleting Document: ", e);
@@ -73,6 +75,7 @@ const PatientProfile = ({ navigation }) => {
 
   const handlelogout = () => {
     AsyncStorage.removeItem("id");
+    AsyncStorage.removeItem("user");
     navigation.navigate("Welcome");
   };
 
@@ -112,7 +115,7 @@ const PatientProfile = ({ navigation }) => {
               borderWidth: 2,
             }}
             textColor="black"
-            onPress={() => deleteAccount(id)}
+            onPress={() => handlelogout()}
           >
             Log out
           </Button>

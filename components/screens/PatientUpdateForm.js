@@ -1,4 +1,12 @@
-import { doc, updateDoc } from "firebase/firestore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import React, { useState } from "react";
 import {
   SafeAreaView,
@@ -49,6 +57,13 @@ const PatientUpdateForm = ({ navigation, route }) => {
         address: newaddress,
       });
       console.log("Document updated ");
+      const q = query(collection(db, "users"), where("email", "==", newemail));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        AsyncStorage.setItem("user", JSON.stringify(doc.data()));
+        AsyncStorage.setItem("id", doc.id);
+      });
+
       onToggleSuccessSnackBar();
     } catch (e) {
       console.error("Error Updating Document: ", e);
