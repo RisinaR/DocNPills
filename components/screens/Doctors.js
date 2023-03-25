@@ -100,13 +100,13 @@ const Doctors = ({ navigation }) => {
 
   return (
     <>
-      <Searchbar
+      {/* <Searchbar
         placeholder="Search"
         onChangeText={(searchTerm) => {
           handleTextSearch(searchTerm);
         }}
         value={searchQuery}
-      />
+      /> */}
       {loading ? (
         <ActivityIndicator
           animating={true}
