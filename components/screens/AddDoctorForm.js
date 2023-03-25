@@ -8,7 +8,12 @@ import {
   Platform,
   Image,
 } from "react-native";
-import { TextInput, Button } from "react-native-paper";
+import {
+  TextInput,
+  Button,
+  Snackbar,
+  ActivityIndicator,
+} from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import db from "../../firebaseConfig";
 import { collection, addDoc } from "firebase/firestore";
@@ -27,11 +32,33 @@ const AddDoctorForm = ({ route, navigation }) => {
   const [text, setText] = useState(" ");
   const [id, setId] = useState(null);
   const [name, setName] = useState(null);
-
+  const [loading, setLoading] = useState(false);
+  const [visibleError, setVisibleError] = useState(false);
+  const [visibleSuccess, setVisibleSuccess] = useState(false);
   const refresh = route.params.params.refresh;
   const setRefresh = route.params.params.setRefresh;
 
+  const onToggleSuccessSnackBar = () => {
+    setVisibleSuccess(!visibleSuccess);
+  };
+
+  const onDismissSuccessSnackBar = () => {
+    setVisibleSuccess(false);
+    setRefresh(!refresh);
+    navigation.navigate("DocNPills");
+  };
+
+  const onToggleErrorSnackBar = () => {
+    setVisibleError(!visibleError);
+  };
+
+  const onDismissErrorSnackBar = () => {
+    setVisibleError(false);
+    setLoading(false);
+  };
+
   const checkSubmit = async () => {
+    setLoading(true);
     if (
       dname != null &&
       splze != null &&
@@ -51,8 +78,12 @@ const AddDoctorForm = ({ route, navigation }) => {
           channelingCenterId: id,
         });
         console.log("Document written with ID: ", docRef.id);
+        setLoading(false);
+        onToggleSuccessSnackBar();
       } catch (err) {
         console.error("Error adding document: ", err);
+        setLoading(false);
+        onToggleErrorSnackBar();
       }
       setRefresh(!refresh);
     } else {
@@ -79,92 +110,119 @@ const AddDoctorForm = ({ route, navigation }) => {
   }, []);
 
   return (
-    <ScrollView style={styles.view}>
-      <Image
-        source={require("../../assets/logo.png")}
-        style={{ width: 50, height: 50, marginLeft: "42%" }}
-      />
-      <SafeAreaView style={styles.form}>
-        <TextInput
-          label="Doctor Name"
-          placeholder="Enter Doctor Name"
-          value={dname}
-          style={styles.input}
-          onChangeText={(text) => setDoctorName(text)}
-          mode="outlined"
-          outlineColor="black"
-          activeOutlineColor="#1e90ff"
+    <>
+      <ScrollView style={styles.view}>
+        <Image
+          source={require("../../assets/logo.png")}
+          style={{ width: 50, height: 50, marginLeft: "42%" }}
         />
+        <SafeAreaView style={styles.form}>
+          <TextInput
+            label="Doctor Name"
+            placeholder="Enter Doctor Name"
+            value={dname}
+            style={styles.input}
+            onChangeText={(text) => setDoctorName(text)}
+            mode="outlined"
+            outlineColor="black"
+            activeOutlineColor="#1e90ff"
+          />
 
-        <TextInput
-          label="Specialization"
-          placeholder="Enter Doctor's Specialization"
-          value={splze}
-          style={styles.input}
-          onChangeText={(text) => setSpecialization(text)}
-          mode="outlined"
-          outlineColor="black"
-          activeOutlineColor="#1e90ff"
-        />
+          <TextInput
+            label="Specialization"
+            placeholder="Enter Doctor's Specialization"
+            value={splze}
+            style={styles.input}
+            onChangeText={(text) => setSpecialization(text)}
+            mode="outlined"
+            outlineColor="black"
+            activeOutlineColor="#1e90ff"
+          />
 
-        <TextInput
-          label="Available Date"
-          placeholder="Enter Available Date"
-          value={adate}
-          style={styles.input}
-          onChangeText={(text) => setDates(text)}
-          mode="outlined"
-          outlineColor="black"
-          activeOutlineColor="#1e90ff"
-        />
+          <TextInput
+            label="Available Date"
+            placeholder="Enter Available Date"
+            value={adate}
+            style={styles.input}
+            onChangeText={(text) => setDates(text)}
+            mode="outlined"
+            outlineColor="black"
+            activeOutlineColor="#1e90ff"
+          />
 
-        <TextInput
-          label="Arrival Time"
-          placeholder="Select Arrival Time"
-          value={time}
-          style={styles.input}
-          mode="outlined"
-          outlineColor="black"
-          activeOutlineColor="#1e90ff"
-          onChangeText={(selectedtime) => setTime(selectedtime)}
-        />
+          <TextInput
+            label="Arrival Time"
+            placeholder="Select Arrival Time"
+            value={time}
+            style={styles.input}
+            mode="outlined"
+            outlineColor="black"
+            activeOutlineColor="#1e90ff"
+            onChangeText={(selectedtime) => setTime(selectedtime)}
+          />
 
-        <TextInput
-          label="Channeling Fee"
-          placeholder="LKR 0.00"
-          value={fee}
-          style={styles.input}
-          keyboardType="numeric"
-          onChangeText={(text) => setFee(text)}
-          mode="outlined"
-          outlineColor="black"
-          activeOutlineColor="#1e90ff"
-        />
+          <TextInput
+            label="Channeling Fee"
+            placeholder="LKR 0.00"
+            value={fee}
+            style={styles.input}
+            keyboardType="numeric"
+            onChangeText={(text) => setFee(text)}
+            mode="outlined"
+            outlineColor="black"
+            activeOutlineColor="#1e90ff"
+          />
 
-        <TextInput
-          label="No of Patients"
-          placeholder="Enter Daily patients checking limit"
-          value={limit}
-          style={styles.input}
-          keyboardType="numeric"
-          onChangeText={(text) => setLimit(text)}
-          mode="outlined"
-          outlineColor="black"
-          activeOutlineColor="#1e90ff"
-        />
+          <TextInput
+            label="No of Patients"
+            placeholder="Enter Daily patients checking limit"
+            value={limit}
+            style={styles.input}
+            keyboardType="numeric"
+            onChangeText={(text) => setLimit(text)}
+            mode="outlined"
+            outlineColor="black"
+            activeOutlineColor="#1e90ff"
+          />
+          {loading ? (
+            <ActivityIndicator
+              animating={true}
+              size="large"
+              color={"#1e90ff"}
+              // style={{ marginTop: "50%" }}
+            />
+          ) : (
+            <Button
+              mode="contained"
+              buttonColor="#1e90ff"
+              style={styles.button}
+              onPress={() => {
+                checkSubmit(), navigation.navigate("ChCenterNavbar");
+              }}
+            >
+              ADD
+            </Button>
+          )}
+        </SafeAreaView>
+      </ScrollView>
 
-        <Button
-          mode="contained"
-          buttonColor="#1e90ff"
-          style={styles.button}
-          onPress={() => {
-            checkSubmit(), navigation.navigate("ChCenterNavbar");
-          }}
-        >
-          ADD
-        </Button>
-      </SafeAreaView>
-    </ScrollView>
+      <Snackbar
+        visible={visibleError}
+        onDismiss={onDismissErrorSnackBar}
+        duration={2000}
+        elevation={5}
+      >
+        Not Successful
+      </Snackbar>
+      <Snackbar
+        visible={visibleSuccess}
+        onDismiss={onDismissSuccessSnackBar}
+        duration={2000}
+        elevation={5}
+      >
+        Doctor Added Successfully
+      </Snackbar>
+    </>
   );
 };
 

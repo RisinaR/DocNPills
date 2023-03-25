@@ -17,7 +17,12 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { TextInput, Button, Snackbar } from "react-native-paper";
+import {
+  TextInput,
+  Button,
+  Snackbar,
+  ActivityIndicator,
+} from "react-native-paper";
 import db from "../../firebaseConfig";
 
 const PatientUpdateForm = ({ navigation, route }) => {
@@ -27,6 +32,7 @@ const PatientUpdateForm = ({ navigation, route }) => {
   const [newaddress, setAddress] = useState(route.params.params.address);
   const [visible, setVisible] = useState(false);
   const [visibleSuccess, setVisibleSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const refresh = route.params.params.refresh;
   const setRefresh = route.params.params.setRefresh;
 
@@ -49,6 +55,7 @@ const PatientUpdateForm = ({ navigation, route }) => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
       await updateDoc(doc(db, "users", (doc.id = route.params.params.id)), {
         name: newname,
@@ -63,12 +70,14 @@ const PatientUpdateForm = ({ navigation, route }) => {
         AsyncStorage.setItem("user", JSON.stringify(doc.data()));
         AsyncStorage.setItem("id", doc.id);
       });
-
       onToggleSuccessSnackBar();
+      setLoading(false);
     } catch (e) {
       console.error("Error Updating Document: ", e);
       onToggleSnackBar();
+      setLoading(false);
     }
+
     setRefresh(!refresh);
   };
 
@@ -129,15 +138,23 @@ const PatientUpdateForm = ({ navigation, route }) => {
           outlineColor="black"
           activeOutlineColor="#1e90ff"
         />
-
-        <Button
-          onPress={handleSubmit}
-          mode="contained"
-          buttonColor="#1e90ff"
-          style={styles.button}
-        >
-          Save Changes
-        </Button>
+        {loading ? (
+          <ActivityIndicator
+            animating={true}
+            size="large"
+            color={"#1e90ff"}
+            // style={{ marginTop: "50%" }}
+          />
+        ) : (
+          <Button
+            onPress={handleSubmit}
+            mode="contained"
+            buttonColor="#1e90ff"
+            style={styles.button}
+          >
+            Save Changes
+          </Button>
+        )}
       </SafeAreaView>
       <Snackbar
         visible={visible}
