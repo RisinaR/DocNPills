@@ -124,13 +124,13 @@ const Medicines = ({ navigation }) => {
 
   return (
     <>
-      <Searchbar
+      {/* <Searchbar
         placeholder="Search"
         onChangeText={(searchTerm) => {
           setSearchQuery(searchTerm);
         }}
         value={searchQuery}
-      />
+      /> */}
       {loading ? (
         <ActivityIndicator
           animating={true}
@@ -182,7 +182,7 @@ const Medicines = ({ navigation }) => {
                     size="small"
                     variant="surface"
                     onPress={() => {
-                      //showDialog(), setDeleteMed(medicine.id);
+                      // showDialog(), setDeleteMed(medicine.id);
                       deleteMedicine(medicine.id);
                     }}
                   />
