@@ -101,6 +101,7 @@ const AddCenterForm = ({ route, navigation }) => {
     } else {
       alert("Please fill all the fields");
       setLoading(false);
+      setRefresh(!refresh);
     }
   };
 
